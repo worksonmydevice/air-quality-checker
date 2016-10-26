@@ -1,23 +1,24 @@
 {
+  "name": "Air Quality Checker",
+  "description": "Air quality checker Chrome browser extension backed by CHMI data (http://portal.chmi.cz)",
+  "version": "1.0.0",
   "background": {
     "persistent": false,
     "page": "background.html"
   },
   "browser_action": {
-    "default_icon": "aqchecker_not_configured.png"
-  },
-  "default_locale": "en",
-  "description": "__MSG_aqchecker_description__",
+    "default_icon": "images/aqchecker_not_configured.png",
+    "default_title": "?",
+    "default_popup": "popup.html"
+  },  
   "icons": {
-    "128": "icon_128.png"
+    "128": "images/icon_128.png"
   },
-  "name": "__MSG_aqchecker_name__",
   "permissions": [
     "alarms",
     "tabs",
     "webNavigation",
     "*://portal.chmi.cz//"
    ],
-  "version": "1.0.0",
   "manifest_version": 2
 }

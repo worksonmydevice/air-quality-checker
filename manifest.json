@@ -9,7 +9,7 @@
   "browser_action": {
     //"default_popup": "html/popup.html",
     "default_icon": "images/aqchecker_not_configured.png",
-    "default_title": "?"
+    "default_title": "zjistit stav ovzduší"
   },  
   "icons": {
     "128": "images/icon_128.png"

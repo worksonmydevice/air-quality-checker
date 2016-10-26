@@ -1,16 +1,15 @@
 var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/actual_hour_data_CZ.html"
 
-chrome.browserAction.onClicked.addListener(openChmiPortalWebPage);
+chrome.browserAction.onClicked.addListener(showChmiPortalWebPage);
 
-function openChmiPortalWebPage() {    
-    chrome.tabs.getAllInWindow(undefined, function(tabs) {
-    for (var i = 0, tab; tab = tabs[i]; i++) {
-      if (tab.url && tab.url == chmiPortalWebPageUrl) {
-        chrome.tabs.update(tab.id, {selected: true});
-        chrome.tabs.reload(tab.id);
-        return;
-      }
-    }
-    chrome.tabs.create({url: chmiPortalWebPageUrl});
-  });
+function showChmiPortalWebPage() {  
+    chrome.tabs.query({"url": chmiPortalWebPageUrl}, function(tabs) {
+        tab = tabs[0];
+        if (tab) {
+            chrome.tabs.update(tab.id, {selected: true});
+            chrome.tabs.reload(tab.id);
+        } else {
+            chrome.tabs.create({url: chmiPortalWebPageUrl});
+        }
+    });
 }

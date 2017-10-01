@@ -16,7 +16,8 @@
   },
   "permissions": [
     "tabs",
-    "*://portal.chmi.cz//"
+    "notifications",
+    "http://portal.chmi.cz/"
    ],
   "manifest_version": 2
 }

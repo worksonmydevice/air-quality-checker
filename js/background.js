@@ -2,8 +2,13 @@ var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_gen
 var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
 var regionCode = "T"
 var stationCode = "TFMIA"
+var periodInMinutes = 0.1
 
 chrome.browserAction.onClicked.addListener(getAirQualityJSON);
+
+function scheduleNextUpdate() {
+    chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
+}
 
 function showChmiPortalWebPage() {  
     chrome.tabs.query({"url": chmiPortalWebPageUrl}, function(tabs) {
@@ -17,10 +22,13 @@ function showChmiPortalWebPage() {
     });
 }
 
-function updateStationIndex(stationIndex) {
+function updateStationData(stationIndex, stationName) {
     var changed = localStorage.stationIndex != stationIndex;
     localStorage.stationIndex = stationIndex;
+    localStorage.stationName = stationName;
     updateIcon();
+    showNotification();
+    
     if (changed) {
         showNotification();
     }
@@ -37,7 +45,7 @@ function showNotification() {
         title: "*** Air Quality Checker ***",
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         type: "basic",
-        message: "Station: " + stationData.Name + "\nAQ status: " + stationData.Ix
+        message: "Station: " + localStorage.stationName + "\nAQ status: " + localStorage.stationIndex
         }, function() {});
 }
 
@@ -58,7 +66,7 @@ function getAirQualityJSON() {
             var state = resp.States[0]
             var region = state.Regions.find(findRegionByCode)
             var stationData = region.Stations.find(findStationByCode);
-            updateStationIndex(stationData.Ix);            
+            updateStationData(stationData.Ix, stationData.name);            
         }
     }
     xhr.send();

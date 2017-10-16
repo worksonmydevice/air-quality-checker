@@ -3,7 +3,7 @@ var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_genera
 var regionCode = "T"
 var stationCode = "TFMIA"
 
-chrome.browserAction.onClicked.addListener(showChmiPortalWebPage);
+chrome.browserAction.onClicked.addListener(getAirQualityJSON);
 
 function showChmiPortalWebPage() {  
     chrome.tabs.query({"url": chmiPortalWebPageUrl}, function(tabs) {
@@ -15,7 +15,30 @@ function showChmiPortalWebPage() {
             chrome.tabs.create({url: chmiPortalWebPageUrl});
         }
     });
-    getAirQualityJSON();
+}
+
+function updateStationIndex(stationIndex) {
+    var changed = localStorage.stationIndex != stationIndex;
+    localStorage.stationIndex = stationIndex;
+    updateIcon();
+    if (changed) {
+        showNotification();
+    }
+}
+
+function updateIcon() {
+    chrome.browserAction.setBadgeText({
+        text: typeof localStorage.stationIndex !== 'undefined' ? localStorage.stationIndex : "?"
+    });
+}
+
+function showNotification() {
+    chrome.notifications.create("AQnotifID", {
+        title: "*** Air Quality Checker ***",
+        iconUrl: chrome.runtime.getURL('images/icon_128.png'),
+        type: "basic",
+        message: "Station: " + stationData.Name + "\nAQ status: " + stationData.Ix
+        }, function() {});
 }
 
 var findRegionByCode = function (region) {
@@ -35,12 +58,7 @@ function getAirQualityJSON() {
             var state = resp.States[0]
             var region = state.Regions.find(findRegionByCode)
             var stationData = region.Stations.find(findStationByCode);
-            chrome.notifications.create("AQnotifID", {
-                                        title: "*** Air Quality Checker ***",
-                                        iconUrl: chrome.runtime.getURL('images/icon_128.png'),
-                                        type: "basic",
-                                        message: "Station: " + stationData.Name + "\nAQ status: " + stationData.Ix
-                                        }, function() {});
+            updateStationIndex(stationData.Ix);            
         }
     }
     xhr.send();

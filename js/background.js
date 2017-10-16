@@ -2,13 +2,34 @@ var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_gen
 var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
 var regionCode = "T"
 var stationCode = "TFMIA"
-var periodInMinutes = 0.1
+var periodInMinutes = 1
 
 chrome.browserAction.onClicked.addListener(getAirQualityJSON);
+
+// SCHEDULING START
+function onInit() {
+    scheduleNextUpdate();
+}
+  
+function onAlarm(alarm) {
+    getAirQualityJSON();
+    scheduleNextUpdate();
+}
 
 function scheduleNextUpdate() {
     chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
 }
+
+chrome.runtime.onInstalled.addListener(onInit);
+chrome.alarms.onAlarm.addListener(onAlarm);
+
+
+chrome.runtime.onStartup.addListener(function() {
+    getAirQualityJSON();
+});
+
+// SCHEDULING END
+
 
 function showChmiPortalWebPage() {  
     chrome.tabs.query({"url": chmiPortalWebPageUrl}, function(tabs) {
@@ -26,9 +47,7 @@ function updateStationData(stationIndex, stationName) {
     var changed = localStorage.stationIndex != stationIndex;
     localStorage.stationIndex = stationIndex;
     localStorage.stationName = stationName;
-    updateIcon();
-    showNotification();
-    
+    updateIcon();    
     if (changed) {
         showNotification();
     }

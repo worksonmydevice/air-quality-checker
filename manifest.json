@@ -17,6 +17,7 @@
   "permissions": [
     "tabs",
     "notifications",
+    "alarms",
     "http://portal.chmi.cz/"
    ],
   "manifest_version": 2

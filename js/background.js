@@ -85,7 +85,7 @@ function getAirQualityJSON() {
             var state = resp.States[0]
             var region = state.Regions.find(findRegionByCode)
             var stationData = region.Stations.find(findStationByCode);
-            updateStationData(stationData.Ix, stationData.name);            
+            updateStationData(stationData.Ix, stationData.Name);            
         }
     }
     xhr.send();

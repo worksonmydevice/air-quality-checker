@@ -20,7 +20,7 @@ function onAlarm(alarm) {
         });
         getAirQualityJSON();
         scheduleNextUpdate();
-    }    
+    }
 }
 
 function scheduleNextUpdate() {
@@ -41,9 +41,41 @@ chrome.browserAction.onClicked.addListener(showNotification);
 // ONCLICK END
 
 function updateIcon() {
+    var stationIndex = typeof localStorage.stationIndex !== 'undefined' ? localStorage.stationIndex : "?";
     chrome.browserAction.setBadgeText({
-        text: typeof localStorage.stationIndex !== 'undefined' ? localStorage.stationIndex : "?"
+        text: stationIndex
     });
+    var iconColor = getIconColor(stationIndex);
+    chrome.browserAction.setBadgeBackgroundColor({
+        color: iconColor
+    });
+}
+
+function getIconColor(stationIndex) {
+    var color;
+    switch (stationIndex) {
+        case "1":
+            color = "#C7EAFB";
+            break;
+        case "2":
+            color = "#9BD3AE";
+            break;
+        case "3":
+            color = "#FFF200";
+            break;
+        case "4":
+            color = "#FAA61A";
+            break;
+        case "5":
+            color = "#ED1C24";
+            break;
+        case "6":
+            color = "#671F20";
+            break;
+        default:
+            color = "#C7EAFB";
+    }
+    return color;
 }
 
 function showNotification() {

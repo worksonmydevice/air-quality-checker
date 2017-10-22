@@ -1,44 +1,50 @@
 var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/actual_hour_data_CZ.html"
 var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
-var regionCode = "T"
-var stationCode = "TFMIA"
+var stationCode;
 var periodInMinutes = 1
-
-chrome.browserAction.onClicked.addListener(getAirQualityJSON);
 
 // SCHEDULING START
 function onInit() {
     scheduleNextUpdate();
 }
-  
+
 function onAlarm(alarm) {
+    chrome.storage.sync.get({
+        stationToMonitor: 'AKALA'
+    }, function (items) {
+        stationCode = items.stationToMonitor;
+    });
     getAirQualityJSON();
     scheduleNextUpdate();
 }
 
 function scheduleNextUpdate() {
-    chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
+    chrome.alarms.create('refresh', { periodInMinutes: periodInMinutes });
 }
 
 chrome.runtime.onInstalled.addListener(onInit);
 chrome.alarms.onAlarm.addListener(onAlarm);
 
 
-chrome.runtime.onStartup.addListener(function() {
+chrome.runtime.onStartup.addListener(function () {
     getAirQualityJSON();
 });
-
 // SCHEDULING END
 
+// ONCLICK START
+chrome.browserAction.onClicked.addListener(showNotification);
 
-function showChmiPortalWebPage() {  
-    chrome.tabs.query({"url": chmiPortalWebPageUrl}, function(tabs) {
+// ONCLICK END
+
+
+function showChmiPortalWebPage() {
+    chrome.tabs.query({ "url": chmiPortalWebPageUrl }, function (tabs) {
         tab = tabs[0];
         if (tab) {
-            chrome.tabs.update(tab.id, {selected: true});
+            chrome.tabs.update(tab.id, { selected: true });
             chrome.tabs.reload(tab.id);
         } else {
-            chrome.tabs.create({url: chmiPortalWebPageUrl});
+            chrome.tabs.create({ url: chmiPortalWebPageUrl });
         }
     });
 }
@@ -47,7 +53,7 @@ function updateStationData(stationIndex, stationName) {
     var changed = localStorage.stationIndex != stationIndex;
     localStorage.stationIndex = stationIndex;
     localStorage.stationName = stationName;
-    updateIcon();    
+    updateIcon();
     if (changed) {
         showNotification();
     }
@@ -65,7 +71,7 @@ function showNotification() {
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         type: "basic",
         message: "Station: " + localStorage.stationName + "\nAQ status: " + localStorage.stationIndex
-        }, function() {});
+    }, function () { });
 }
 
 var findRegionByCode = function (region) {
@@ -79,13 +85,19 @@ function findStationByCode(station) {
 function getAirQualityJSON() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", chmiPortalJSONUrl, true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             var resp = JSON.parse(xhr.responseText);
-            var state = resp.States[0]
-            var region = state.Regions.find(findRegionByCode)
-            var stationData = region.Stations.find(findStationByCode);
-            updateStationData(stationData.Ix, stationData.Name);            
+            var state = resp.States[0];
+            var stationData;
+            var regions = state.Regions;
+            for (i = 0; i < regions.length; i++) {
+                stationData = regions[i].Stations.find(findStationByCode);
+                if (stationData != undefined) {
+                    break;
+                }
+            }
+            updateStationData(stationData.Ix, stationData.Name);
         }
     }
     xhr.send();

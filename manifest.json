@@ -10,7 +10,7 @@
     //"default_popup": "html/popup.html",
     "default_icon": "images/aqchecker_not_configured.png",
     "default_title": "Air Quality Checker"
-  },  
+  },
   "options_ui": {
     "page": "html/options.html",
     "chrome_style": true
@@ -24,6 +24,7 @@
     "alarms",
     "storage",
     "http://portal.chmi.cz/"
-   ],
+  ],
+  "incognito": "not_allowed",
   "manifest_version": 2
 }

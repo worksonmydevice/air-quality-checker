@@ -80,9 +80,9 @@ function getIconColor(stationIndex) {
 
 function showNotification() {
     chrome.notifications.create("AQnotifID", {
-        title: "*** Air Quality Checker ***",
+        title: localStorage.stationName + " >>" + localStorage.stationIndex + "<<",
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         type: "basic",
-        message: "Station: " + localStorage.stationName + "\nAQ status: " + localStorage.stationIndex
+        message: "Station: " + localStorage.stationName + "\nAQ Status: " + localStorage.stationIndex
     }, function () { });
 }

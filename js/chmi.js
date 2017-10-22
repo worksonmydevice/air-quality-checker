@@ -41,17 +41,20 @@ function getAirQualityJSON(callback) {
                         }
                     }
                 }                
-                updateStationData(stationData.Ix, stationData.Name);
+                updateStationData(stationData);
             }            
         }
     }
     xhr.send();
 }
 
-function updateStationData(stationIndex, stationName) {
+function updateStationData(stationData) {
+    var stationIndex = stationData.Ix;
+    var stationName = stationData.Name;
     var changed = (localStorage.stationIndex != stationIndex || localStorage.stationName != stationName);
     localStorage.stationIndex = stationIndex;
     localStorage.stationName = stationName;
+    localStorage.stationData = JSON.stringify(stationData);
     if (changed) {
         chrome.alarms.create('station-data-changed', { when: Date.now() });        
     }

@@ -18,22 +18,31 @@ function findStationByCode(station) {
     return station.Code === stationCode;
 }
 
-function getAirQualityJSON() {
+function getAirQualityJSON(callback) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", chmiPortalJSONUrl, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             var resp = JSON.parse(xhr.responseText);
-            var state = resp.States[0];
-            var stationData;
-            var regions = state.Regions;
-            for (i = 0; i < regions.length; i++) {
-                stationData = regions[i].Stations.find(findStationByCode);
-                if (stationData != undefined) {
-                    break;
-                }
-            }
-            updateStationData(stationData.Ix, stationData.Name);
+            if (callback) {
+                callback(resp);
+            } else {
+                var stationData;
+                var states = resp.States;
+                for (j =0; j < states.length; j++) {    
+                    if (stationData != undefined) {
+                        break;
+                    }                
+                    var regions = states[j].Regions;
+                    for (i = 0; i < regions.length; i++) {
+                        stationData = regions[i].Stations.find(findStationByCode);
+                        if (stationData != undefined) {
+                            break;
+                        }
+                    }
+                }                
+                updateStationData(stationData.Ix, stationData.Name);
+            }            
         }
     }
     xhr.send();

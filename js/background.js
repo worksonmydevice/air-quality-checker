@@ -83,19 +83,41 @@ function showNotification() {
         notificationsEnabled: true
     }, function (items) {
         if (items.notificationsEnabled) {
-            var stationData = JSON.parse(localStorage.stationData);
-            var stationDataComponents = stationData.Components;
-            var notificationMessage = "";
-            stationDataComponents.map(function(component) {
-                notificationMessage = notificationMessage + component.Code + ": " + component.Ix + "; ";
-            });
-        
-            chrome.notifications.create("AQnotifID", {
-                title: localStorage.stationName + " >>" + localStorage.stationIndex + "<<",
-                iconUrl: chrome.runtime.getURL('images/icon_128.png'),
-                type: "basic",
-                message: notificationMessage
-            }, function () { });
+            var notification = getListNotification();
+            chrome.notifications.create("AQnotifID", notification, function () { });
         }
-    });        
+    });
+}
+
+function getBasicNotification() {
+    var stationData = JSON.parse(localStorage.stationData);
+    var stationDataComponents = stationData.Components;
+    var notificationMessage = "";
+    stationDataComponents.map(function (component) {
+        notificationMessage = notificationMessage + component.Code + ": " + component.Ix + "; ";
+    });
+
+    return {
+        type: "basic",
+        title: localStorage.stationName + " >>" + localStorage.stationIndex + "<<",
+        iconUrl: chrome.runtime.getURL('images/icon_128.png'),
+        message: notificationMessage
+    };
+}
+
+function getListNotification() {
+    var stationData = JSON.parse(localStorage.stationData);
+    var stationDataComponents = stationData.Components;
+    var notificationMessage = "";
+    var components = stationDataComponents.map(function (component) {
+        return {title: component.Code + ": ", message: component.Ix.toString()};
+    });
+
+    return {
+        type: "list",
+        title: localStorage.stationName + " >>" + localStorage.stationIndex + "<<",
+        iconUrl: chrome.runtime.getURL('images/icon_128.png'),
+        message: "primary message to display",
+        items: components
+    };
 }

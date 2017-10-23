@@ -5,6 +5,7 @@ var periodInMinutes = 1
 
 // SCHEDULING START
 function onInit() {
+    updateIcon();
     scheduleNextUpdate();
 }
 

@@ -7,7 +7,6 @@
     "page": "html/background.html"
   },
   "browser_action": {
-    //"default_popup": "html/popup.html",
     "default_icon": "images/icon_19.png",
     "default_title": "Air Quality Checker"
   },

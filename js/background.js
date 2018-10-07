@@ -6,7 +6,7 @@ var periodInMinutes = 1
 // SCHEDULING START
 function onInit() {
     updateIcon();
-    scheduleNextUpdate();
+    scheduleNextUpdate();    
 }
 
 function onAlarm(alarm) {
@@ -38,9 +38,7 @@ chrome.runtime.onStartup.addListener(function () {
 
 // ONCLICK START
 chrome.browserAction.onClicked.addListener(showNotification);
-chrome.notifications.onClicked.addListener(function (notificationId) {
-    showChmiPortalWebPage();
-});
+chrome.notifications.onButtonClicked.addListener(openChmiPageEvent);
 // ONCLICK END
 
 function updateIcon() {
@@ -90,6 +88,10 @@ function showNotification() {
     );
 }
 
+function openChmiPageEvent(notificationId, buttonIndex) {
+    showChmiPortalWebPage();
+}
+
 function getBasicNotification() {
     var stationData = JSON.parse(localStorage.stationData);
     var stationDataComponents = stationData.Components;
@@ -119,6 +121,7 @@ function getListNotification() {
         title: localStorage.stationName,
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         message: "Overall quality index: " + localStorage.stationIndex,
-        items: components
+        items: components,
+        buttons: [{title:"overview"}]
     };
 }

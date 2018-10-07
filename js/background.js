@@ -113,9 +113,9 @@ function getListNotification() {
 
     return {
         type: "list",
-        title: localStorage.stationName + " >>" + localStorage.stationIndex + "<<",
+        title: localStorage.stationName,
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
-        message: "primary message to display",
+        message: "Overall quality index: " + localStorage.stationIndex,
         items: components
     };
 }

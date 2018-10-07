@@ -12,7 +12,6 @@ function onInit() {
 function onAlarm(alarm) {
     if (alarm.name === 'station-data-changed') {
         updateIcon();
-        showNotification();
     } else {
         chrome.storage.sync.get({
             stationToMonitor: 'AKALA'
@@ -80,14 +79,12 @@ function getIconColor(stationIndex) {
 }
 
 function showNotification() {
-    chrome.storage.sync.get({
-        notificationsEnabled: true
-    }, function (items) {
-        if (items.notificationsEnabled) {
+    chrome.storage.sync.get(
+        function (items) {
             var notification = getListNotification();
             chrome.notifications.create("AQnotifID", notification, function () { });
         }
-    });
+    );
 }
 
 function getBasicNotification() {

@@ -38,6 +38,9 @@ chrome.runtime.onStartup.addListener(function () {
 
 // ONCLICK START
 chrome.browserAction.onClicked.addListener(showNotification);
+chrome.notifications.onClicked.addListener(function (notificationId) {
+    showChmiPortalWebPage();
+});
 // ONCLICK END
 
 function updateIcon() {
@@ -81,8 +84,8 @@ function getIconColor(stationIndex) {
 function showNotification() {
     chrome.storage.sync.get(
         function (items) {
-            var notification = getListNotification();
-            chrome.notifications.create("AQnotifID", notification, function () { });
+            var notification = getListNotification();                        
+            notif = chrome.notifications.create("AQnotifID", notification, function () { });            
         }
     );
 }

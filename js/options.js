@@ -1,9 +1,7 @@
 function save_options() {
     var station = document.getElementById('station').value;
-    var notificationsEnabled = document.getElementById('notification-enabled').checked;
     chrome.storage.sync.set({
-        stationToMonitor: station,
-        notificationsEnabled: notificationsEnabled
+        stationToMonitor: station
     }, function () {
         var status = document.getElementById('status');
         status.textContent = 'Options saved.';
@@ -16,11 +14,9 @@ function save_options() {
 
 function restore_options() {
     chrome.storage.sync.get({
-        stationToMonitor: 'AKALA',
-        notificationsEnabled: true
+        stationToMonitor: 'AKALA'
     }, function (items) {
         document.getElementById('station').value = items.stationToMonitor;
-        document.getElementById('notification-enabled').checked = items.notificationsEnabled;
     });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

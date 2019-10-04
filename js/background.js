@@ -5,6 +5,12 @@ var periodInMinutes = 1
 
 // SCHEDULING START
 function onInit() {
+    if (localStorage.stationData === undefined) {
+        localStorage.stationData = '{"Components" : [{"Code": "CO", "Ix": -1}]}';
+    }
+    if (localStorage.stationName === undefined) {
+        localStorage.stationName = "N/A";
+    }
     updateIcon();
     scheduleNextUpdate();    
 }

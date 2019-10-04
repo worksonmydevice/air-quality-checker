@@ -2,14 +2,16 @@ var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_gen
 var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
 var stationCode;
 var periodInMinutes = 1
+const DEFAULT_STATION_CODE = "AKALA";
 
 // SCHEDULING START
 function onInit() {
     if (localStorage.stationData === undefined) {
-        localStorage.stationData = '{"Components" : [{"Code": "CO", "Ix": -1}]}';
+        localStorage.stationData = '{"Components" : [{"Code": "N/A", "Ix": -1}]}';
     }
-    if (localStorage.stationName === undefined) {
-        localStorage.stationName = "N/A";
+    if (localStorage.stationCode === undefined) {
+        localStorage.stationCode = DEFAULT_STATION_CODE;
+        localStorage.stationName = "---";
     }
     updateIcon();
     scheduleNextUpdate();    
@@ -20,7 +22,7 @@ function onAlarm(alarm) {
         updateIcon();
     } else {
         chrome.storage.sync.get({
-            stationToMonitor: 'AKALA'
+            stationToMonitor: DEFAULT_STATION_CODE
         }, function (items) {
             stationCode = items.stationToMonitor;
         });
@@ -89,7 +91,7 @@ function showNotification() {
     chrome.storage.sync.get(
         function () {
             var notification = getListNotification();                        
-            notif = chrome.notifications.create("AQnotifID", notification, function () { });            
+            notif = chrome.notifications.create(null, notification, null);            
         }
     );
 }
@@ -118,7 +120,7 @@ function getListNotification() {
     var stationData = JSON.parse(localStorage.stationData);
     var stationDataComponents = stationData.Components;
     var components = stationDataComponents.map(function (component) {
-        return {title: component.Code + ": ", message: component.Ix.toString()};
+        return {title: component.Code, message: "    " + component.Ix.toString()};
     });
 
     return {
@@ -127,6 +129,6 @@ function getListNotification() {
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         message: "Overall quality index: " + localStorage.stationIndex,
         items: components,
-        buttons: [{title:"overview"}]
+        buttons: [{title:"chmi web"}]
     };
 }

@@ -81,14 +81,14 @@ function getIconColor(stationIndex) {
 
 function showNotification() {
     chrome.storage.sync.get(
-        function (items) {
+        function () {
             var notification = getListNotification();                        
             notif = chrome.notifications.create("AQnotifID", notification, function () { });            
         }
     );
 }
 
-function openChmiPageEvent(notificationId, buttonIndex) {
+function openChmiPageEvent() {
     showChmiPortalWebPage();
 }
 
@@ -111,7 +111,6 @@ function getBasicNotification() {
 function getListNotification() {
     var stationData = JSON.parse(localStorage.stationData);
     var stationDataComponents = stationData.Components;
-    var notificationMessage = "";
     var components = stationDataComponents.map(function (component) {
         return {title: component.Code + ": ", message: component.Ix.toString()};
     });

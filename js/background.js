@@ -96,8 +96,12 @@ function showNotification() {
     );
 }
 
-function openChmiPageEvent() {
-    showChmiPortalWebPage();
+function openChmiPageEvent(notificationId, buttonIndex) {
+    if (buttonIndex == 0) {
+        showChmiPortalWebPage();
+    } else if (buttonIndex == 1) {
+        chrome.runtime.openOptionsPage();
+    }
 }
 
 function getBasicNotification() {
@@ -129,6 +133,6 @@ function getListNotification() {
         iconUrl: chrome.runtime.getURL('images/icon_128.png'),
         message: "Overall quality index: " + localStorage.stationIndex,
         items: components,
-        buttons: [{title:"chmi web"}]
+        buttons: [{title:"chmi web"},{title:"options"}]
     };
 }

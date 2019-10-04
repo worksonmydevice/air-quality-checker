@@ -51,9 +51,11 @@ function getAirQualityJSON(callback) {
 function updateStationData(stationData) {
     var stationIndex = stationData.Ix;
     var stationName = stationData.Name;
-    var changed = (localStorage.stationIndex != stationIndex || localStorage.stationName != stationName);
+    var stationCode = stationData.Code;
+    var changed = (localStorage.stationIndex != stationIndex || localStorage.stationCode != stationCode);
     localStorage.stationIndex = stationIndex;
     localStorage.stationName = stationName;
+    localStorage.stationCode = stationCode;
     localStorage.stationData = JSON.stringify(stationData);
     if (changed) {
         chrome.alarms.create('station-data-changed', { when: Date.now() });        

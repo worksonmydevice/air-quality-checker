@@ -1,5 +1,5 @@
-var chmiPortalWebPageUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/actual_hour_data_CZ.html"
-var chmiPortalJSONUrl = "http://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
+var chmiPortalWebPageUrl = "https://portal.chmi.cz/files/portal/docs/uoco/web_generator/actual_hour_data_CZ.html"
+var chmiPortalJSONUrl = "https://portal.chmi.cz/files/portal/docs/uoco/web_generator/aqindex_cze.json"
 var stationCode;
 var periodInMinutes = 1
 const DEFAULT_STATION_CODE = "AKALA";
